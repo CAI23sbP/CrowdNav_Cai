@@ -1,18 +1,19 @@
 # CrowdNav_Cai
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/b914c1ef-27dd-4833-977b-a062cd415919"  width="300" height="300"/>
+<img src="https://github.com/user-attachments/assets/5d496075-1428-4652-bc0f-934f8072cac1"  width="300" height="300"/>
 </p>
-
 this repo makes for training and testing a Crowd navigation or a map based navigation
 
-you can run online reinforcement learning in a navigation task
+you can run online reinforcement learning in a navigation task by [stable-baselines3](https://github.com/DLR-RM/stable-baselines3) and [sb3-contrib](https://github.com/Stable-Baselines-Team/stable-baselines3-contrib)!
+
+we have added GRU+PPO for user (please see result in my past [repo](https://github.com/CAI23sbP/GRU_AC))
 
 ## Simulator rendering
 
-1. the pink can not be seen by 2d scan, the blue can be seen by 2d scan. (this is for CrowdNav testing or training)
+1. ${\textsf{\color{pink}The pink}}$ can not be seen by 2d scan, ${\textsf{\color{blue}The blue}}$ can be seen by 2d scan. (this is for CrowdNav testing or training)
 
-2. A pink line is a path which is made by Dijkstra algorithm, and A pink triangle is a subgoal, A Yellow triangle is a goal.
+2. ${\textsf{\color{pink}A pink}}$ line is a path which is made by Dijkstra algorithm, and ${\textsf{\color{pink}A pink}}$  triangle is a subgoal, ${\textsf{\color{Yellow}A yellow}}$ triangle is a goal.
 
 3. apply map (with walls)
 
@@ -102,10 +103,22 @@ see detail ```base_config.yaml``` (path: crowd_nav/configs/)
 
 ### 5. make train_<your_model_name>.py
 
-see detail ```train_<model_name>.py```
+see detail ```train.py```
 
 ### 6. add your mode in test.py
 
+
+### Example weight ##
+
+1. create new folder : model_weight / example
+
+2. download model weight: [Link](https://drive.google.com/file/d/1MwlLwJjmVhf7JkuYeE6M73yjsvNvNKse/view)
+
+3. move weight to model_weight
+
+4. test by under code
+
+``` test.py --model_path example/Last.pt ```
 
 
 
@@ -117,3 +130,9 @@ see detail ```train_<model_name>.py```
 [3] [CrowdNav_DSRNN](https://github.com/Shuijing725/CrowdNav_DSRNN)
 
 [4] [Pas_CrowdNav](https://github.com/yejimun/PaS_CrowdNav)
+
+
+## Contact ## 
+
+snp0783@naver.com
+
