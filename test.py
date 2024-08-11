@@ -24,7 +24,7 @@ def callback_info(infos, dones, info_deque: Deque):
 class TrainWorkSpace():
     def __init__(self, config: OmegaConf, args:argparse.ArgumentParser):
 
-        self.testing(config,os.path.join(os.getcwd(), f'{args.weight_path}'), args.n_eval , args.render) 
+        self.testing(config,os.path.join(os.getcwd(), 'model_weight', f'{args.weight_path}'), args.n_eval , args.render) 
 
     def testing(self, config, name, n_eval_episodes ,render):
         th.manual_seed(config.default.seed)
