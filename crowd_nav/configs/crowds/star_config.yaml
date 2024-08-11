@@ -1,0 +1,170 @@
+default:
+  env_name: 'star-v0'
+  robot_policy: 'star' 
+  human_num: 5
+  test_scenario: 'circle_crossing'
+  train_val_scenario: 'circle_crossing'
+  group_human: False 
+  seed: 47 
+  randomize_attributes: True
+  num_processes: 4
+  load_all: False
+  load_demon: False 
+  
+system:
+  time_step: 0.25
+  time_limit: 50.0
+  circle_radius: 4
+  square_width: 10
+  
+env_config:
+  env:
+    val_size: 100
+    test_size: 500
+
+  map:
+    resolution: 0.1
+    map_size_m: 14.
+    apply_map: False
+    num_circles: 0 #2
+    num_walls: 0 #3
+    discomfort_dist: 0.5
+    circle_inflation_rate_il: 1.25
+    wall_inflation_rate_il: 1.0
+
+  reward:
+    discomfort_dist:  0.25  
+    discomfort_penalty_factor:  10.0  
+    success_reward: 10.
+    collision_penalty: -20.
+    timeout_penalty: 0.0
+    # apply_move_penalty: True
+    gamma: 0.99
+  
+  sim:
+    human_num: ${default.human_num}
+    group_human: ${default.group_human}
+    test_scenario: ${default.test_scenario}
+    train_val_scenario: ${default.train_val_scenario}
+    randomize_attributes: ${default.randomize_attributes}
+
+    time_step: ${system.time_step}
+    time_limit: ${system.time_limit}
+    circle_radius: ${system.circle_radius}
+    square_width: ${system.square_width}
+
+  robot:
+    visible: False
+    policy: ${default.robot_policy}
+    radius: 0.3
+    v_pref: 0.6
+    sensor: 'coordinates'
+    FOV: 2.
+    max_jerk: 0.5
+    goal_pose: 'far_away'
+    kinematics: 'unicycle'
+
+  humans:
+    visible: True
+    policy: 'ORCA'
+    radius: 0.3
+    v_pref: 0.6
+    max_v_pref: 0.8
+    min_v_pref: 0.25
+    step_v_pref: 0.05
+    a_min_pref: 0.3
+    a_max_pref : 0.9 
+    
+    sensor: 'coordinates'
+    FOV: 2.    
+    random_unobservability: False
+    unobservable_chance: 0.3
+    random_goal_changing: True
+    goal_change_chance: 0.25
+    end_goal_changing: True
+    end_goal_change_chance: 1.0
+    random_radii: False
+    random_v_pref: True
+
+orca_config:
+  neighbor_dist: 10
+  safety_space: 0.15
+  time_horizon: 5.
+  time_horizon_obst: 5.
+
+obs_config:
+  scan:
+    increment: 0.00581718236208
+    min_angle: 0.
+    max_angle: 6.27543783188
+    n_angles: 360
+    max_range: 5.
+    lidar_legs: True
+    leg_radius: 0.05
+  
+  ogms:
+    submap_size_m: 6.
+
+visualize_config:
+  window_size: 512
+  scale: 20
+
+
+expert_config:
+  expert: ${default.robot_policy}
+
+  save:
+    folder: "expert_trj/${default.robot_policy}"
+    file: "${default.robot_policy}_demon"
+    min_episodes: 500
+
+  load:
+    folder: ${expert_config.save.folder}
+    file: ["human_demon"]
+
+  human:
+    max_lin_acc: 0.6 
+    max_ang_acc: 0.6
+    max_lin_vel: 0.6 
+    max_ang_vel: 0.6
+    min_lin_vel: 0.05
+    min_ang_vel: 0.05
+
+replay_buffer_capacity: 
+segment: 35
+activation: 'relu'
+reward_lr: 0.0004
+reward_batch:
+large_batch:
+label_margin:
+teacher_beta:
+teacher_gamma:
+teacher_eps_mistake:
+teacher_eps_skip:
+teacher_eps_equal:
+
+
+sac:
+  num_seed_steps : 5000 # steps for random sample action from action space
+  num_train_steps : 1e6 # train steps
+  eval_frequency : 10000 # frequency of eval
+  save_interval : 10000 # frequency of save
+  num_eval_episodes : 50 # episodes for eval
+  save_video : False # useless
+  action_range : [-robot.v_pref, robot.v_pref] # action range
+  discount : 0.99
+  init_temperature : 0.1
+  alpha_lr : 1e-4
+  alpha_betas : [0.9, 0.999]
+  actor_lr : 1e-4
+  actor_betas : [0.9, 0.999]
+  actor_update_frequency : 1
+  critic_lr : 1e-4
+  critic_betas : [0.9, 0.999]
+  critic_tau : 0.005
+  critic_target_update_frequency : 2
+  batch_size : 1024
+  learnable_temperature : True
+  hidden_dim : 265
+  hidden_depth : 4
+  log_std_bounds : [-20, 2]

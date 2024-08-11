@@ -1,0 +1,126 @@
+default:
+  env_name: 'pas-v0'
+  robot_policy: 'pas_rnn' # or Example , ORCA
+  human_num: 6
+  test_scenario: 'circle_crossing'
+  train_val_scenario: 'circle_crossing'
+  group_human: False 
+  seed: 47 
+  randomize_attributes: True
+  num_processes: 4
+  load_all: False
+  load_demon: False 
+  
+system:
+  time_step: 0.25
+  time_limit: 50.0
+  circle_radius: 4
+  square_width: 10
+  
+env_config:
+  env:
+    val_size: 100
+    test_size: 500
+
+  map:
+    resolution: 0.1
+    map_size_m: 14.
+    apply_map: False
+    num_circles: 0 #2
+    num_walls: 0 #3
+    discomfort_dist: 0.5
+    circle_inflation_rate_il: 1.25
+    wall_inflation_rate_il: 1.0
+
+  reward:
+    discomfort_dist:  0.25  
+    discomfort_penalty_factor:  10.0  
+    success_reward: 10.
+    collision_penalty: -5.
+    timeout_penalty: 0.0
+    gamma: 0.99
+  
+  sim:
+    human_num: ${default.human_num}
+    group_human: ${default.group_human}
+    test_scenario: ${default.test_scenario}
+    train_val_scenario: ${default.train_val_scenario}
+    randomize_attributes: ${default.randomize_attributes}
+
+    time_step: ${system.time_step}
+    time_limit: ${system.time_limit}
+    circle_radius: ${system.circle_radius}
+    square_width: ${system.square_width}
+
+  robot:
+    visible: False
+    policy: ${default.robot_policy}
+    radius: 0.3
+    v_pref: 0.6
+    sensor: 'coordinates'
+    FOV: 2.
+    max_jerk: 0.5
+    goal_pose: 'far_away'
+    kinematics: 'holonomic'
+
+  humans:
+    visible: True
+    policy: 'ORCA'
+    radius: 0.3
+    v_pref: 0.6
+    max_v_pref: 0.8
+    min_v_pref: 0.25
+    step_v_pref: 0.05
+    a_min_pref: 0.3
+    a_max_pref : 0.9 
+    
+    sensor: 'coordinates'
+    FOV: 2.    
+    random_unobservability: False
+    unobservable_chance: 0.3
+    random_goal_changing: True
+    goal_change_chance: 0.25
+    end_goal_changing: True
+    end_goal_change_chance: 1.0
+    random_radii: False
+    random_v_pref: True
+
+orca_config:
+  neighbor_dist: 10
+  safety_space: 0.15
+  time_horizon: 5.
+  time_horizon_obst: 5.
+
+obs_config:
+  scan:
+    increment: 0.00581718236208
+    min_angle: 0.
+    max_angle: 6.27543783188
+    n_angles: 360
+    max_range: 5.
+    lidar_legs: True
+    leg_radius: 0.05
+  
+  ogms:
+    submap_size_m: 6.
+
+visualize_config:
+  window_size: 512
+  scale: 20
+
+
+pas:
+  grid_res: 0.1
+  gridsensor: 'sensor'
+  gridtype: 'local'
+  sequence: 4 
+  encoder_type: 'vae'
+  PaS_coef: 1.
+  seq_flag: True
+  collectingdata: False
+
+num_steps: 30
+seq_length: 30
+rnn_input_size: 64
+rnn_hidden_size: 128
+rnn_output_size: 128

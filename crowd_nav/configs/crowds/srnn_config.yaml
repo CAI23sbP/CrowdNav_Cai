@@ -1,0 +1,151 @@
+default:
+  env_name: 'srnn-v0'
+  robot_policy: 'srnn' 
+  human_num: 5
+  test_scenario: 'circle_crossing'
+  train_val_scenario: 'circle_crossing'
+  group_human: False 
+  seed: 47 
+  randomize_attributes: True
+  num_processes: 4
+  load_all: False
+  load_demon: False 
+  
+system:
+  time_step: 0.25
+  time_limit: 50.0
+  circle_radius: 4
+  square_width: 10
+  
+env_config:
+  env:
+    val_size: 100
+    test_size: 500
+
+  map:
+    resolution: 0.1
+    map_size_m: 14.
+    apply_map: False
+    num_circles: 0 #2
+    num_walls: 0 #3
+    discomfort_dist: 0.5
+    circle_inflation_rate_il: 1.25
+    wall_inflation_rate_il: 1.0
+
+  reward:
+    discomfort_dist:  0.25  
+    discomfort_penalty_factor:  10.0  
+    success_reward: 10.
+    collision_penalty: -20.
+    timeout_penalty: 0.0
+    # apply_move_penalty: True
+    gamma: 0.99
+  
+  sim:
+    human_num: ${default.human_num}
+    group_human: ${default.group_human}
+    test_scenario: ${default.test_scenario}
+    train_val_scenario: ${default.train_val_scenario}
+    randomize_attributes: ${default.randomize_attributes}
+
+    time_step: ${system.time_step}
+    time_limit: ${system.time_limit}
+    circle_radius: ${system.circle_radius}
+    square_width: ${system.square_width}
+
+  robot:
+    visible: False
+    policy: ${default.robot_policy}
+    radius: 0.3
+    v_pref: 0.6
+    sensor: 'coordinates'
+    FOV: 2.
+    max_jerk: 0.5
+    goal_pose: 'far_away'
+    kinematics: 'unicycle'
+
+  humans:
+    visible: True
+    policy: 'ORCA'
+    radius: 0.3
+    v_pref: 0.6
+    max_v_pref: 0.8
+    min_v_pref: 0.25
+    step_v_pref: 0.05
+    a_min_pref: 0.3
+    a_max_pref : 0.9 
+    
+    sensor: 'coordinates'
+    FOV: 2.    
+    random_unobservability: False
+    unobservable_chance: 0.3
+    random_goal_changing: True
+    goal_change_chance: 0.25
+    end_goal_changing: True
+    end_goal_change_chance: 1.0
+    random_radii: False
+    random_v_pref: True
+
+orca_config:
+  neighbor_dist: 10
+  safety_space: 0.15
+  time_horizon: 5.
+  time_horizon_obst: 5.
+
+obs_config:
+  scan:
+    increment: 0.00581718236208
+    min_angle: 0.
+    max_angle: 6.27543783188
+    n_angles: 360
+    max_range: 5.
+    lidar_legs: True
+    leg_radius: 0.05
+  
+  ogms:
+    submap_size_m: 6.
+
+visualize_config:
+  window_size: 512
+  scale: 20
+
+
+SRNN:
+  human_node_rnn_size: 128
+  human_human_edge_rnn_size: 256
+  human_node_input_size: 3
+  human_human_edge_input_size: 2 
+  human_node_output_size: 256
+  human_node_embedding_size: 64
+  human_human_edge_embedding_size: 64
+  attention_size: 64
+
+ppo:
+  num_mini_batch : 2  # number of batches for ppo
+  num_steps : 30  # number of forward steps
+  recurrent_policy : True  # use a recurrent policy
+  epoch : 5  # number of ppo epochs
+  clip_param : 0.2  # ppo clip parameter
+  value_loss_coef : 0.5  # value loss coefficient
+  entropy_coef : 0.0  # entropy term coefficient
+  use_gae : True  # use generalized advantage estimation
+  gae_lambda : 0.95  
+
+training:
+  lr: 4e-5  
+  eps: 1e-5 
+  alpha: 0.99
+  max_grad_norm: 0.5   
+  num_env_steps: 20e6  # number of environment steps to train: 10e6 for holonomic, 20e6 for unicycle
+  use_linear_lr_decay: True  # use a linear schedule on the learning rate: True for unicycle, False for holonomic
+  save_interval: 200  # save interval, one save per n updates
+  log_interval: 20  # log interval, one log per n updates
+  use_proper_time_limits: False  # compute returns taking into account time limits
+  cuda_deterministic: False  # sets flags for determinism when using CUDA (potentially slow!)
+  cuda: True  # use CUDA for training
+  num_processes: 12 # how many training CPU processes to use
+  output_dir: 'model_weight/srnn'  # the saving directory for train.py
+  resume: False  # resume training from an existing checkpoint or not
+  load_path: 'data/example_model/checkpoints/27776.pt'  # if resume = True, load from the following checkpoint
+  overwrite: True  # whether to overwrite the output directory in training
+  num_threads: 1  # number of threads used for intraop parallelism on CPU
