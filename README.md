@@ -42,13 +42,13 @@ git clone https://github.com/CAI23sbP/CrowdNav_Cai.git && cd CrowdNav_Cai && pip
 #### 3.1. git clone pymap2d & build
 
 ```
-git clone https://github.com/CAI23sbP/pymap2d.git && pip3 install -e . && cd ..
+git clone https://github.com/CAI23sbP/pymap2d.git && cd pymap2d && pip3 install -e . && cd ..
 ```
 
 #### 3.2. git clone py-rvo2 <ver: danieldugas-0.0.2> 
 
 ```
-git clone https://github.com/danieldugas/Python-RVO2.git && cd Python-RVO2 && python3 setup.py build && python3 setup.py install && cd ../..
+git clone https://github.com/danieldugas/Python-RVO2.git && cd Python-RVO2 && python3 setup.py build && python3 setup.py install && cd ..
 ```
 
 #### 3.3. git clone range_libc
@@ -77,8 +77,10 @@ train.py
 ### 1. testing your model
 
 
+if you want to test example model, see detail : ### Example weight ###
+
 ```
-test.py --n_eval <number of eval> --weight_path <weight path '../../.pt','../../.pth', ...> --render <visualize or not> 
+test.py --n_eval 100 --weight_path Your_model_name --render True --config_name base_config
 ```
 
 
@@ -108,7 +110,7 @@ see detail ```train.py```
 ### 6. add your mode in test.py
 
 
-### Example weight ##
+### Example weight ###
 
 1. create new folder : model_weight / example
 
@@ -132,7 +134,7 @@ see detail ```train.py```
 [4] [Pas_CrowdNav](https://github.com/yejimun/PaS_CrowdNav)
 
 
-## Contact ## 
+## Contact us ## 
 
 snp0783@naver.com
 

@@ -15,7 +15,7 @@ class ExampleSimScan(BaseSim):
         d = {}
         d['ranges'] = spaces.Box(low=-np.inf, high=np.inf, shape=(4, 360), dtype = np.float64)  
         d['robotstate_obs'] = spaces.Box(low=-np.inf, high=np.inf, shape=(4, 5), dtype = np.float64)  
-        action_space = np.array([0.6, 0.6])
+        action_space = np.array([0.6, 0.4])
         self.action_space = spaces.Box(low=-action_space, high=action_space, shape = (2,), dtype = np.float64)
         self.sequence = 4
         self.observation_space = spaces.Dict(d)

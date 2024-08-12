@@ -34,6 +34,8 @@ class ExampleExtractor(BaseFeaturesExtractor):
                                                     nn.ReLU(),
                                                     nn.Conv1d(in_channels=32, out_channels=64, kernel_size=3, stride=3),  ## [1, 64, 23, 23]
                                                     nn.ReLU(),
+                                                    nn.Conv1d(in_channels=64, out_channels=64, kernel_size=3, stride=1),  ## [1, 64, 21, 21]
+                                                    nn.ReLU(),
                                                     nn.Conv1d(in_channels=64, out_channels=128, kernel_size=3, stride=1),  ## [1, 64, 21, 21]
                                                     nn.ReLU(),
                                                     nn.Conv1d(in_channels=128, out_channels=64, kernel_size=3, stride=1),

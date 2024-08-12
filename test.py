@@ -1,15 +1,14 @@
 from drl_utils.env_utils.make_env import make_vec_env
 from drl_utils.env_utils.evaluate import evaluate_policy
-from omegaconf import OmegaConf
 import torch as th
 import numpy as np 
 import pathlib
-import hydra
 import os
 from stable_baselines3.ppo import PPO
 from typing import Deque
 from crowd_sim.envs.utils.info import *
 import argparse
+from hydra import compose, initialize
 
 def callback_info(infos, dones, info_deque: Deque):
     if dones:
@@ -21,8 +20,14 @@ def callback_info(infos, dones, info_deque: Deque):
             elif isinstance(info['info'], ReachGoal):
                 info_deque.append('ReachGoal')
 
-class TrainWorkSpace():
-    def __init__(self, config: OmegaConf, args:argparse.ArgumentParser):
+class TestWorkSpace():
+    def __init__(self, args:argparse.ArgumentParser):
+        with initialize(
+            version_base=None, 
+            config_path=str(pathlib.Path(__file__).parent.joinpath('crowd_nav', 'configs')), 
+            job_name="test_model"
+            ):
+            config = compose(config_name=f"{args.config_name}")
 
         self.testing(config,os.path.join(os.getcwd(), 'model_weight', f'{args.weight_path}'), args.n_eval , args.render) 
 
@@ -37,35 +42,29 @@ class TrainWorkSpace():
                      env_name=f'{config.default.env_name}',
                      n_envs = 1,
                      rng = rng,
-                     parallel = True, 
+                     parallel = False, 
                      max_episode_steps = int(config.system.time_limit/ config.system.time_step),
                      config = config,
                      phase='test',
                      )  
         
         learner = PPO.load(name, env = vecenv)  ## TODO
-        collision_cnt, timeout_cnt, reachgoal_cnt = evaluate_policy(learner, vecenv, callback= callback_info , render=render, n_eval_episodes=n_eval_episodes, )
+        test_info = evaluate_policy(learner, vecenv, callback= callback_info , render=render, n_eval_episodes=n_eval_episodes, )
         
-        print(f'[Name]:{name.split("/")[-3]}, [ReachGoal]: {reachgoal_cnt}, [Collision]: {collision_cnt}, [Timeout]: {timeout_cnt}')
+        print(f'[Name]:{name.split("/")[-3]}, {test_info}')
         vecenv.close()
         del vecenv
 
-@hydra.main(
-    version_base=None,
-    config_path=str(pathlib.Path(__file__).parent.joinpath(
-        'crowd_nav', 'configs')),
-    config_name='base_config.yaml'
-)
-
-def main(cfg):
+def main():
     parser = argparse.ArgumentParser(description="test.py args")
 
     parser.add_argument("--n_eval", type=int, help="set number of eval", default = 100)
     parser.add_argument("--render", type=bool, help="set visualize", default = True)
-    parser.add_argument("--weight_path", type=str, help="set weight path")
+    parser.add_argument("--weight_path", type=str, help="set weight path", default='example/Last')
+    parser.add_argument("--config_name", type=str, help="set config name", default = 'base_config')
 
     args = parser.parse_args()
-    TrainWorkSpace(cfg, args)
+    TestWorkSpace(args)
 
 if __name__ == "__main__":
     main()

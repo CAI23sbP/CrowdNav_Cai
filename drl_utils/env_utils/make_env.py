@@ -12,10 +12,6 @@ import gymnasium as gym
 import numpy as np
 from stable_baselines3.common import monitor
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecEnv, VecNormalize
-from drl_utils.algorithms.crowd_common.vec_env.envs import TimeLimitMask, VecPyTorch
-from drl_utils.algorithms.crowd_common.vec_env.shmem_vec_env import ShmemVecEnv
-from drl_utils.algorithms.crowd_common.vec_env.dummy_vec_env import DummyVecEnv as DumVecEnv
-from drl_utils.algorithms.crowd_common.vec_env.monitor import Monitor
 from omegaconf import OmegaConf
 
 from imitation.util.util import make_seeds
@@ -72,8 +68,7 @@ def make_vec_env(
     if parallel:
         envs = SubprocVecEnv(env_fns, start_method="forkserver")
         return VecNormalize(envs, 
-                    #  training=True if phase in ['train'] else False, 
-                     norm_obs=True,
+                     norm_obs=False,
                      norm_obs_keys=['robotstate_obs','ranges'],
                      norm_reward=False,
                      gamma=config.env_config.reward.gamma
@@ -81,61 +76,8 @@ def make_vec_env(
     else:
         envs = DummyVecEnv(env_fns)
         return VecNormalize(envs, 
-                    #  training=True if phase in ['train'] else False, 
-                     norm_obs=True,
+                     norm_obs=False,
                      norm_obs_keys=['robotstate_obs','ranges'],
                      norm_reward=False,
                      gamma=config.env_config.reward.gamma
                      )
-
-def make_env(
-        env_name, 
-        seed, 
-        rank, 
-        allow_early_resets, 
-        max_episode_steps, 
-        envConfig=None, 
-        envNum=1, 
-        phase=None):
-
-    def _thunk():
-        env = gym.make(env_name, max_episode_steps=max_episode_steps)
-        env.configure(envConfig, nenv = envNum, phase = phase)
-
-        envSeed = seed + rank if seed is not None else None
-        env.reset(seed=int(envSeed), phase = phase)
-
-        if str(env.__class__.__name__).find('TimeLimit') >= 0:
-            env = TimeLimitMask(env)
-
-        env = Monitor(
-            env,
-            None,
-            allow_early_resets=allow_early_resets)
-        return env
-    return _thunk
-
-
-def make_vec_envs(env_name: str,
-                  device,
-                  rng: np.random.Generator,
-                  allow_early_resets: bool,
-                  n_envs: int = 8,
-                  phase : str = 'train',
-                  max_episode_steps: Optional[int] = None,
-                  config=None,
-                  ):
-    env_seeds = make_seeds(rng, n_envs)
-    envs = [
-        make_env(env_name=env_name, seed = seed, rank = i, allow_early_resets= allow_early_resets, envConfig=config,
-                 envNum=n_envs,phase=phase, max_episode_steps = max_episode_steps)
-        for i, seed in enumerate(env_seeds)
-    ]
-
-    if len(envs) > 1:
-        envs = ShmemVecEnv(envs, context='fork')
-    else:
-        envs = DumVecEnv(envs)
-
-    envs = VecPyTorch(envs, device)
-    return envs

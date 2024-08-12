@@ -9,7 +9,6 @@ from stable_baselines3.common.vec_env import VecEnv, VecMonitor, is_vecenv_wrapp
 mimic stable-baselines3
 """
 from crowd_sim.envs.utils.info import Collision, ReachGoal, Timeout
-from drl_utils.algorithms.dppo.learner import Learner
 from typing import Deque
 from collections import deque
 
@@ -24,7 +23,7 @@ def callback_info(infos, dones, info_deque: Deque):
                 info_deque.append('ReachGoal')
                 
 def evaluate_policy(
-    model: Union["type_aliases.PolicyPredictor",Learner]  ,
+    model: Union["type_aliases.PolicyPredictor"]  ,
     env: Union[gym.Env, VecEnv],
     n_eval_episodes: int = 10,
     deterministic: bool = True,
@@ -66,18 +65,12 @@ def evaluate_policy(
         episode_starts = np.ones((env.num_envs,), dtype=bool)
 
         while not is_done:
-            if isinstance(model ,Learner):
-                actions = model.sample_actions(
-                    observations,  
-                    temperature=0.0,
-                )
-            else:
-                actions, states = model.predict(
-                    observations,  
-                    state=states,
-                    episode_start=episode_starts,
-                    deterministic=deterministic,
-                )
+            actions, states = model.predict(
+                observations,  
+                state=states,
+                episode_start=episode_starts,
+                deterministic=deterministic,
+            )
                 
             if render and phase in ['test', 'val']:
                 env.render()

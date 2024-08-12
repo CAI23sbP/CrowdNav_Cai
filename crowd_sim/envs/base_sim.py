@@ -96,7 +96,6 @@ class BaseSim(gym.Env):
         obs_dict, self.distances_travelled_in_base_frame = self.ObsManager.get_observation(robot = self.robot, 
                                                                                             humans=self.humans, 
                                                                                             distances_travelled_in_base_frame=self.distances_travelled_in_base_frame, 
-                                                                                            sim_map = self.sim_map
                                                                                             )
         self.lidar_scan = obs_dict['ranges']
         self.lidar_angles = obs_dict['angles']
