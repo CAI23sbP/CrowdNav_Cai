@@ -68,7 +68,7 @@ see config file in ``` crowd_nav/configs/*.yaml ```
 
 
 ```
-train.py 
+train.py --model_name default_model --config_name base_config --device cuda
 ```
 
 
