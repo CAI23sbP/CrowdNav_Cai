@@ -83,6 +83,10 @@ if you want to test example model, see detail : ### Example weight ###
 test.py --n_eval 100 --weight_path Your_model_name --render True --config_name base_config
 ```
 
+Here is testing rendering (from example weight)
+
+
+
 
 ## How make your agent
 
@@ -121,7 +125,6 @@ see detail ```train.py```
 4. test by under code
 
 ``` test.py --model_path example/Last.pt ```
-
 
 
 ## Reference code
