@@ -85,8 +85,15 @@ test.py --n_eval 100 --weight_path Your_model_name --render True --config_name b
 
 Here is testing rendering (from example weight)
 
-https://github.com/user-attachments/assets/0f3125e2-a01a-4f45-a3f1-66b9b409e332
 
+
+
+https://github.com/user-attachments/assets/0e130e25-7be9-472f-9909-47a0484f41fc
+
+
+
+
+https://github.com/user-attachments/assets/93282553-f4ba-44f4-8b86-14a6ee501555
 
 
 
