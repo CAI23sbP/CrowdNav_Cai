@@ -13,7 +13,7 @@ we have added GRU+PPO for user (please see result in my past [repo](https://gith
 
 1. ${\textsf{\color{pink}The pink}}$ can not be seen by 2d scan, ${\textsf{\color{blue}The blue}}$ can be seen by 2d scan. (this is for CrowdNav testing or training)
 
-2. ${\textsf{\color{pink}A pink}}$ line is a path which is made by Dijkstra algorithm, and ${\textsf{\color{pink}A pink}}$  triangle is a subgoal, ${\textsf{\color{Yellow}A yellow}}$ triangle is a goal.
+2. ${\textsf{\color{pink}A pink}}$ line is a path which is made by Dijkstra algorithm, and ${\textsf{\color{pink}A pink}}$ triangle is a subgoal which is made by look-ahead planning, ${\textsf{\color{Yellow}A yellow}}$ triangle is a goal.
 
 3. apply map (with walls)
 
