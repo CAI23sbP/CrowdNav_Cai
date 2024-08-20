@@ -3,6 +3,11 @@
 <p align="center">
 <img src="https://github.com/user-attachments/assets/5d496075-1428-4652-bc0f-934f8072cac1"  width="300" height="300"/>
 </p>
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/13eabbad-0afc-4b84-aa76-14130e7d1519"  width="300" height="300"/>
+</p>
+
 this repo makes for training and testing a Crowd navigation or a map based navigation
 
 you can run online reinforcement learning in a navigation task by [stable-baselines3](https://github.com/DLR-RM/stable-baselines3) and [sb3-contrib](https://github.com/Stable-Baselines-Team/stable-baselines3-contrib)!
